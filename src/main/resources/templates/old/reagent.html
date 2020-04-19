@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <title>人员名单</title>
+</head>
+
+<body style="'margin:50px;'">
+<div><a href="/user/toAdd">添加用户</a></div>
+<table class="table table-striped">
+    <thead>
+    <tr>
+        <th>姓名</th>
+        <th>部门</th>
+        <th>权限</th>
+        <th>加入日期</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="user:${courseList}">
+        <td th:text="${userStat.count}"></td>
+        <td th:text="${userlist.name}"></td>
+        <td th:text="${user.dept}"></td>
+        <td th:text="${user.role}"></td>
+        <td th:text="${user.createDate}"></td>
+        <td>
+            <a th:href="@{/user/toUpdate(id=${user.id})}">修改</a>
+            <a th:href="@{/user/delete(id=${user.id})}">删除</a>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+</body>
+</html>

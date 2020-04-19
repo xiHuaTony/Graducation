@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tony.heproject.mapper.CourseMapper">
+
+    <!--查询已审批课程-->
+    <select id="selectAllCourses" resultType="com.tony.heproject.bean.Course">
+     SELECT	* FROM `course` where teacher=#{teacher} and school=#{school} and status = 1
+    </select>
+
+    <!--查询未审批课程-->
+    <select id="uncheckList" resultType="com.tony.heproject.bean.Course">
+     SELECT	* FROM `course` where teacher=#{teacher} and school=#{school} and status = 0
+    </select>
+
+    <!--废止-->
+    <select id="courseCount" resultType="com.tony.heproject.bean.user_course">
+ SELECT COUNT(r.NAME='伊红' or null) as yhCounts ,
+ COUNT(r.NAME='苏木素' or null) as smsCounts ,
+ COUNT(r.NAME='返蓝液' or null) as flyCounts
+ FROM course r WHERE
+	createDate > (
+		SELECT
+			DATE_SUB(
+				CURRENT_TIMESTAMP,
+				INTERVAL 1 DAY
+			)
+	)
+
+    </select>
+
+    <!--新增课程-->
+    <insert id="addCourse">
+        INSERT INTO course(id,courseNum,cname,school,institute,teacher,startDate,endDate) VALUES (#{id},#{courseNum},#{cname},#{school},#{institute},#{teacher},#{startDate},#{endDate})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT @@identity
+        </selectKey>
+    </insert>
+
+    <!--删除-->
+    <delete id="deleteCourse">
+        DELETE FROM course Where id=#{id}
+    </delete>
+
+</mapper>

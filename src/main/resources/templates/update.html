@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=institute-width, initial-scale=1, maximum-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>在线课堂后台</title>
+    <link rel="stylesheet" href="layui/css/layui.css" th:href="@{/layui/css/layui.css}" media="all"/>
+    <link rel="stylesheet" href="layui/css/modules/laydate.default/laydate.css"
+          th:href="@{/layui/css/modules/laydate.default/laydate.css}" media="all"/>
+    <!-- Jquery Js -->
+    <script type="text/javascript" src="js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+    <!-- Layui Js -->
+    <script type="text/javascript" src="layui/layui.js" th:src="@{/layui/layui.js}"></script>
+    <!-- Jqarticle Js -->
+    <script type="text/javascript" src="js/jparticle.min.js" th:src="@{/js/jparticle.min.js}"></script>
+</head>
+
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">在线课堂后台</div>
+        <ul class="layui-nav  layui-layout-left">
+            <li class="layui-nav-item"><a href="/homePage"><i class="layui-icon layui-icon-home"></i>主页</a></li>
+            <li class="layui-nav-item"><a href="/runningStatus"><i class="layui-icon layui-icon-read"></i>课程管理</a></li>
+            <li class="layui-nav-item"><a href="/application"><i class="layui-icon layui-icon-star-fill"></i>我的收藏</a></li>
+            <li class="layui-nav-item"><a href="/deviceManage"><i class="layui-icon layui-icon-notice"></i>我的消息</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">[[${user?.uname}]]，欢迎登录本系统！</li>
+            <li class="layui-nav-item"><a href="/logout"><i class="layui-icon layui-icon-radio"></i>退出登录</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed">
+                    <a class="" href="javascript:;">
+                        <i class="layui-icon layui-icon-friends"></i>教师模块</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/setScore"><i class="layui-icon layui-icon-form"></i>成绩评分</a></dd>
+                        <dd><a href="/application"><i class="layui-icon layui-icon-add-1"></i>申请开课</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:"><i class="layui-icon layui-icon-friends"></i>管理员模块</a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="/examine"><i class="layui-icon layui-icon-list"></i>课程审批</a></dd>
+                        <dd><a href="/all"><i class="layui-icon layui-icon-group"></i>用户管理</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="/user/toUpdate" ><i
+                        class="layui-icon layui-icon-edit"></i>修改资料</a></li>
+                <li class="layui-nav-item"><a href=""><i class="layui-icon layui-icon-release"></i>发布消息</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- 主页菜单栏结束-->
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div class="layui-fluid">
+<!--    <div class="layui-fluid">-->
+<!--    <div class="layui-col-md1 layui-col-md-offset1"></div>-->
+<!--    <div class="layui-col-md8 layui-col-md-offset2">-->
+        <br><br><br><br><br>
+        <form action="/user/addOrUpdate" class="layui-form" role="form" method="post" name="form" lay-filter="filter">
+            <div class="layui-form-item">
+                <label class="layui-form-label">姓名：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="uname" autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">学校名称：</label>
+                <div class="layui-input-block">
+                    <select id="school" name="school" lay-filter="schoolFilter" lay-search >
+                        <option value=""></option>
+                        <option value="">直接选择或搜索选择</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">学院名称：</label>
+                <div class="layui-input-block">
+                    <select id="institute" name="institute" lay-filter="instituteFilter" lay-search>
+                        <option value=""></option>
+                        <option value="">直接选择或搜索选择</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">专业名称：</label>
+                <div class="layui-input-block">
+                    <input type="text" name="major" id="major" autocomplete="off"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">角色选择：</label>
+                <div class="layui-input-block">
+                    <select id="role" name="role" lay-filter="roleFilter" lay-search >
+                        <option value="学生">学生</option>
+                        <option value="教师">教师</option>
+                        <option value="管理员">管理员</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">学号：</label>
+                <div class="layui-input-block">
+                    <input type="number" name="account" id="account" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码：</label>
+                <div class="layui-input-block">
+                    <input type="password" name="pwd" id="pwd" autocomplete="off"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="demoTable">
+                    <div class="layui-input-block">
+                        <input type="hidden" id="id" name="id" />
+                        <button type="submit" class="layui-btn" lay-submit="" id="add" lay-filter="addUser">确定</button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        </div>
+    </div>
+    <!--    <div class="layui-col-md2 layui-col-md-offset10"></div>-->
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © 友情链接： <a href="https://www.icourse163.org/">中国大学MOOC</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="https://ke.qq.com/">腾讯课堂</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <a href="https://study.163.com/">网易课堂</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    </div>
+</div>
+<script>
+    // 数据1：机构列表
+    layui.use(['layer', 'table', 'element', 'form', 'laydate'], function () {
+        var table = layui.table //表格
+            , layer = layui.layer
+            , form = layui.form //表单
+            , element = layui.element //元素操作
+            , layDate = layui.laydate;
+
+        // 日期格式
+        layDate.render({
+            elem: '#createDate'
+            , type: 'datetime'
+        });
+
+        //监听导航点击
+        element.on('nav(demo)', function (elem) {
+            layer.msg(elem.text());
+        });
+
+        //动态加载下拉框:学校
+        var school = null;  //定义一个空值
+        form.on('select(schoolFilter)', function (data) {
+            school = data.elem[data.elem.selectedIndex].text;  //取选中下拉框的文本并赋值给school
+        });
+        $.ajax({
+            url: '/schoolList',
+            type: "post",
+            dataType: "json",
+            success: function (ret) {
+                var data = ret.data;
+                for (var i = 0; i < data.length; i++) {
+                    $('#school').append("<option value=" + data[i].sname + ">" + data[i].sname + "</option>")
+                }
+                form.render("select");
+            }
+        });
+
+        //动态加载下拉框:学院
+        var institute = null;  //定义一个空值
+        form.on('select(instituteFilter)', function (data) {
+            institute = data.elem[data.elem.selectedIndex].text;  //取选中下拉框的文本并赋值给school
+        });
+        $.ajax({
+            url: '/instituteList',
+            type: "post",
+            dataType: "json",
+            success: function (ret) {
+                var data = ret.data;
+                for (var i = 0; i < data.length; i++) {
+                    $('#institute').append("<option value=" + data[i].iname + ">" + data[i].iname + "</option>")
+                }
+                form.render("select");
+            }
+        });
+
+        // 事件所监听的是全部的form模块元素
+        //如果使用 form.on('submit(filter)')会导致延迟显示
+        form.on(function (addform) { //addform是form表单中所选中所有数据 addform.field 为表单中的值
+            addform.field.school = school;  //把school的值赋给要传入后台的对象
+            addform.field.institute = institute;
+            addform.field.role = role;
+            $.ajax({
+                url: '/user/addOrUpdate',
+                type: 'post',
+                data: addform.field,
+                dataType: 'json'
+            });
+            return false;
+        });
+    });<!--数据显示结束-->
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tony.heproject.mapper.ScoreMapper">
+
+    <!--查询有分数的学生-->
+    <select id="getScores" resultType="com.tony.heproject.bean.user_course">
+     SELECT
+    u.uname,
+	uc.account,
+	c.cname,
+	uc.courseNum,
+	uc.score
+FROM
+	user_course uc,
+	course c,
+	USER u
+WHERE
+	c.teacher = #{c.teacher}
+AND uc.courseNum = c.courseNum
+AND uc.account = u.account
+AND u.role = "学生"
+AND uc.score is not NULL
+    </select>
+
+    <!--查询无分数的学生-->
+    <select id="setScores" resultType="com.tony.heproject.bean.user_course">
+          SELECT
+    u.uname,
+	uc.account,
+	c.cname,
+	uc.courseNum,
+	uc.score
+FROM
+	user_course uc,
+	course c,
+	USER u
+WHERE
+	c.teacher = #{c.teacher}
+AND uc.courseNum = c.courseNum
+AND uc.account = u.account
+AND u.role = "学生"
+AND uc.score is  NULL
+    </select>
+
+	<!--查询无分数的学生-->
+	<select id="scoresLook" resultType="com.tony.heproject.bean.score_look">
+		SELECT
+		COUNT(t.score > 60 OR NULL) AS pass,
+		COUNT(t.score &lt; 60 OR NULL) AS fail,
+		COUNT(t.score = 100 OR NULL) AS full,
+		COUNT(t.score IN(58, 59) OR NULL) AS toReview,
+		COUNT(t.score IS NOT NULL OR NULL) AS getNum,
+		COUNT(t.score IS NULL OR NULL) AS setNum
+		FROM
+		(
+		SELECT
+		uc.score AS score
+		FROM
+		user_course uc,
+		course c,
+		USER u
+		WHERE
+		c.teacher = #{c.teacher}
+		AND uc.courseNum = c.courseNum
+		AND uc.account = u.account
+		AND u.role = "学生"
+		) t;
+
+
+	</select>
+
+	<!--修改-->
+	<update id="scoreToSet">
+        UPDATE  user_course SET score=#{score}  WHERE account=#{account} and courseNum=#{courseNum}
+    </update>
+
+
+</mapper>

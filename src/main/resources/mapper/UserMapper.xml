@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.tony.heproject.mapper.UserMapper">
+
+
+    <select id="selectAllUsers" resultType="com.tony.heproject.bean.User">
+        SELECT id, uname,school,institute,major,role,account,pwd FROM user
+    </select>
+
+    <select id="selectUserById" resultType="com.tony.heproject.bean.User">
+        SELECT id, uname,school,institute,major,role,account,pwd  FROM user WHERE id=#{id}
+    </select>
+
+    <select id="selectUserByAccount" resultType="com.tony.heproject.bean.User">
+        SELECT id, uname,school,institute,major,role,account,pwd  FROM user WHERE account=#{account}
+    </select>
+
+    <!--修改-->
+    <update id="updateUser">
+        UPDATE user SET id=#{id} ,uname=#{uname},school=#{school},institute=#{institute},major=#{major},role=#{role},account=#{account},pwd=#{pwd} WHERE id=#{id}
+    </update>
+
+    <!--删除-->
+    <delete id="deleteUser">
+        DELETE FROM user Where id=#{id}
+    </delete>
+
+    <!--新增-->
+    <insert id="addUser">
+        INSERT INTO user(id, uname,school,institute,major,role,account,pwd  ) VALUES (#{id} ,#{uname},#{school},#{institute},#{major},#{role},#{account},#{pwd})
+        <selectKey resultType="int" keyProperty="id" order="AFTER">
+            SELECT @@identity
+        </selectKey>
+    </insert>
+
+</mapper>
